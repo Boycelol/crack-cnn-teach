@@ -6,3 +6,4 @@ opencv-python-headless>=4.8.0
 pandas>=2.0
 plotly>=5.18
 scipy>=1.10
+python-pptx

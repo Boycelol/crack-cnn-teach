@@ -13,6 +13,7 @@ import time
 import os
 from io import BytesIO
 import base64
+from pptx import Presentation
 
 # ==================== 页面配置 ====================
 st.set_page_config(
@@ -672,12 +673,20 @@ def main():
         
         st.markdown("---")
         
-        if st.button("📊 打开教学PPT", use_container_width=True):
+        if st.button("📊 预览教学PPT", use_container_width=True):
             try:
-                os.startfile("C6.pptx")
-                st.success("正在打开PPT...")
-            except:
-                st.error("未找到C6.pptx文件")
+                prs = Presentation("C6.pptx")
+                st.success(f"PPT共 {len(prs.slides)} 页，可下载到本地完整查看")
+                # 这里可以循环读取每页文字展示简易预览
+                for idx, slide in enumerate(prs.slides, 1):
+                    text = ""
+                    for shape in slide.shapes:
+                        if shape.has_text_frame:
+                            text += shape.text + "\n"
+                    st.subheader(f"第{idx}页")
+                    st.text(text if text else "当前页面无文字内容")
+            except Exception as e:
+                st.error(f"PPT读取失败：{str(e)}")
         
         st.markdown("---")
         st.caption(f"🆔 会话ID: {get_session_id()}")
